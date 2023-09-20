@@ -15,3 +15,4 @@ moralis frq for hardhat proxy server
 moralis-admin-cli connect local hardhat dev chain
 add moralis sync services and watch events
 use Moralis Cloud Function to update NFT status after one block
+useMoralisQuery Hook 
