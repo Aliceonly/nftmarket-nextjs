@@ -4,8 +4,12 @@ import Head from "next/head"
 import Header from "../components/Header.js"
 import { NotificationProvider } from "web3uikit"
 
-const APP_ID = process.env.NEXT_PUBLIC_APP_ID
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
+
+const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: "https://api.studio.thegraph.com/query/53377/nft-marketplace/v0.0.1",
+})
 
 export default function App({ Component, pageProps }) {
     return (
@@ -13,11 +17,13 @@ export default function App({ Component, pageProps }) {
             <Head>
                 <title>NFT交易所</title>
             </Head>
-            <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
-                <NotificationProvider>
-                    <Header />
-                    <Component {...pageProps} />
-                </NotificationProvider>
+            <MoralisProvider initializeOnMount={false}>
+                <ApolloProvider client={client}>
+                    <NotificationProvider>
+                        <Header />
+                        <Component {...pageProps} />
+                    </NotificationProvider>
+                </ApolloProvider>
             </MoralisProvider>
         </div>
     )
