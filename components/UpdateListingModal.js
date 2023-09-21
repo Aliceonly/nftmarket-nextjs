@@ -6,7 +6,7 @@ import {ethers} from "ethers";
 
 export default function UpdateListingModal({ nftAddress, tokenId, isVisible, marketplaceAddress,onClose }) {
     const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState(0)
-    cosnt dispatch = useNotification()
+    const dispatch = useNotification()
 
     const handleUpdateListingSuccess = async (tx) => {
         await tx.wait(1)

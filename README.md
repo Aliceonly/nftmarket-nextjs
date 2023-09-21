@@ -3,7 +3,8 @@
         1.如果你持有该NFT，你可以修改定价
         2.如果不，你可以买
 2.出售页面
-    1.你可以上架NFT
+    1.你可以上架自己的NFT
+    2.提款余额
 
 Moralis Indexer
 NextJs Link
@@ -19,4 +20,4 @@ useMoralisQuery Hook
 使用useWeb3Contract Hook 获取tokenURI 然后用useEffect渲染页面
 use IPFS gateway
 NextJs Image
-web3uikit Card Modal Input useNotification
+web3uikit Card Modal Input useNotification Form 
