@@ -3,11 +3,12 @@ import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NFTMarketplace.json"
 import nftAbi from "../constants/BasicNft.json"
 import Image from "next/image"
-import { Card } from "web3uikit"
+import { Card,useNotification } from "web3uikit"
+import UpdateListingModal from "./UpdateListingModal"
 
 const truncateStr = (fullStr, strLen) => {
     if (fullStr.length <= strLen) return fullStr
-    const separator = '...'
+    const separator = "..."
     const separatorLength = separator.length
     const charsToShow = strLen - separatorLength
     const frontChars = Math.ceil(charsToShow / 2)
@@ -19,12 +20,32 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
+const handleCardClick = () => {
+    isOwnerByUser ? setShowModal(true) : buyItem({
+        onError: (error) => console.log(error),
+        onSuccess: () => handleBuyItemSuccess()
+    })
+}
+
+const handleBuyItemSuccess = () => {
+    dispatch({
+        type: "success",
+        message: "Item bought!",
+        title: "Item bought",
+        position: "topR"
+    })
+}
+
 export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress, seller }) {
-    const { isWeb3Enabled,account } = useMoralis()
+    const { isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
-    
+    const [showModal, setShowModal] = useState(false)
+    const dispatch = useNotification()
+
+    const hideModal = () => setShowModal(false)
+
     const { runContractFunction: getTokenURI } = useWeb3Contract({
         abi: nftAbi,
         contractAddress: nftAddress,
@@ -32,6 +53,17 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
         params: {
             tokenId: tokenId,
         },
+    })
+
+    const { runContractFunction: buyItem } = useWeb3Contract({
+        abi: nftMarketplaceAbi,
+        contractAddress: marketplaceAddress,
+        functionName: "buyItem",
+        msgValue: price,
+        params: {
+            nftAddress: nftAddress,
+            tokenId:tokenId
+        }
     })
 
     async function updateUI() {
@@ -61,22 +93,35 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
         <div>
             <div>
                 {imageURI ? (
-                    <Card title={tokenName} description={tokenDescription}>
-                        <div className="p-2">
-                            <div className="flex flex-col items-end gap-2">
-                                <div>#{tokenId}</div>
-                                <div>Owned By {formattedSellerAddress}</div>
-                                <Image
-                                    loader={() => imageURI}
-                                    src={imageURI}
-                                    height="200"
-                                    width="200"
-                                    alt=""
-                                />
-                                <div>{ethers.utils.formatUnits(price, "ether")} ETH</div>
+                    <div>
+                        <UpdateListingModal
+                            isVisible={showModal}
+                            tokenId={tokenId}
+                            marketplaceAddress={marketplaceAddress}
+                            nftAddress={nftAddress}
+                            onClose={hideModal}
+                        />
+                        <Card
+                            title={tokenName}
+                            description={tokenDescription}
+                            onClick={handleCardClick}
+                        >
+                            <div className="p-2">
+                                <div className="flex flex-col items-end gap-2">
+                                    <div>#{tokenId}</div>
+                                    <div>Owned By {formattedSellerAddress}</div>
+                                    <Image
+                                        loader={() => imageURI}
+                                        src={imageURI}
+                                        height="200"
+                                        width="200"
+                                        alt=""
+                                    />
+                                    <div>{ethers.utils.formatUnits(price, "ether")} ETH</div>
+                                </div>
                             </div>
-                        </div>
-                    </Card>
+                        </Card>
+                    </div>
                 ) : (
                     <div>Loading...</div>
                 )}

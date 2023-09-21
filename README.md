@@ -1,5 +1,5 @@
 1.主页
-    1.展示最近上架的NFTs
+    1.展示最近上架的NFTs Listing NFT in L1 currency
         1.如果你持有该NFT，你可以修改定价
         2.如果不，你可以买
 2.出售页面
@@ -19,4 +19,4 @@ useMoralisQuery Hook
 使用useWeb3Contract Hook 获取tokenURI 然后用useEffect渲染页面
 use IPFS gateway
 NextJs Image
-web3uikit Card
+web3uikit Card Modal Input useNotification
