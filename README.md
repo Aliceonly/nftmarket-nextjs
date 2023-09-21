@@ -6,7 +6,7 @@
     1.你可以上架NFT
 
 Moralis Indexer
-NextJs
+NextJs Link
 TailwindCSS
 
 
@@ -16,3 +16,7 @@ moralis-admin-cli connect local hardhat dev chain
 add moralis sync services and watch events
 use Moralis Cloud Function to update NFT status after one block
 useMoralisQuery Hook 
+使用useWeb3Contract Hook 获取tokenURI 然后用useEffect渲染页面
+use IPFS gateway
+NextJs Image
+web3uikit Card
